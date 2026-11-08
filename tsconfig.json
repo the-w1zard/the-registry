@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		"lib": ["DOM", "DOM.Iterable", "ES2022", "ES2021.WeakRef"],
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"declaration": true,
+		"allowJs": true,
+		"strict": true,
+		"noEmit": true,
+		"isolatedModules": false,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": ["node", "@the-w1zard/dx",  "@the-w1zard/alias_types", "@the-w1zard/types", "./src/index.d.ts"],
+		"baseUrl": "./",
+		"paths": {
+			"~/*": ["src/*"],
+			"#STR": ["@the-w1zard/app_store"],
+			"#HPR": ["@the-w1zard/prim_helpers"],
+			"#SS": ["@the-w1zard/solutions"],
+			"#PRIM": ["@the-w1zard/prims"],
+			"#sr": ["./src/the-cloud.ts"],
+			"#sauron": ["./src/index.ts"],
+			"#the-cloud": ["./src/the-cloud.ts"],
+			"#tc": ["./src/the-cloud.ts"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules", "dist"]
+}
