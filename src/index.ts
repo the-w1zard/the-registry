@@ -230,9 +230,9 @@ class Registry extends EventEmitter {
 	public _sid(): string { return this._byteid(); }
 	public b(): string { return this._byteid(); }
 
-	public r = "_root_";
-	public m = "_master_";
-	public s = "_slave_";
+	public r = "THE_WIZARD_ROOT_REG";
+	public m = "SAURON_MASTER_REG";
+	public s = "SAURON_SLAVE_REG";
     public DEVTOOLS_ACTIVE = false;
 
     constructor() {
@@ -242,239 +242,313 @@ class Registry extends EventEmitter {
 	// #endregion
 	//                                                                                               [STATE]
 	// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-    public state = {
-		getMap: <K, V>(slave: A = this.s, master: A = this.m, rk: A = this.r): M2<K, V> => {
-			let root = this.#context.get(rk); // (globalThis as any)[rk]  //  ; (globalThis as any)[rk] = root;
-			if (!root) {
-				root = new M2<A, M2I<A, M2I<A, A>>>();
-				this.#context.set(rk, root);
-			}
-	
-			let masterMap = root.get(master);
-			if (!masterMap) {
-				masterMap = new M2<A, M2I<A, A>>();
-				root.set(master, masterMap);
-			}
-	
-			let slaveMap = masterMap.get(slave);
-			if (!slaveMap) {
-				slaveMap = new M2<K, V>();
-				masterMap.set(slave, slaveMap);
-			}
-			return slaveMap;
-		},
-		getMetadata:(s = this.s, m = this.m, r = this.r) => {
-			let root = this.#meta_context.get(r); //  (globalThis as A)[r]; // STATE_CONTEXT === "sauron" ?  : null;
-			if (!root) {
-				root = new M2<A, M2I<A, M2I<A, A>>>();
-				this.#meta_context.set(r, root);
-			}
-	
-			let masterMap = root.get(m);
-			if (!masterMap) {
-				masterMap = new M2<A, M2I<A, A>>();
-				root.set(m, masterMap);
-			}
-	
-			let metaMap = masterMap.get(s);
-			if (!metaMap) {
-				metaMap = {
-					_batches: new Set<S | SY>(),
-					_batchQueue: new Map<S | SY, A>(),
-					_batchOpts: new Map<S | SY, { triggerRender?: B }>(),
-					_history: new Map<S | SY, A[]>(),
-					_timeTravel: new Map<S | SY, N>(),
-					_globalListeners: new Set<(key: S | SY, value: A) => V>(),
-					_global_subscribers: new Map<S, Set<() => V>>(),
-					_waiters: new Map<S | SY, Set<(value: A) => V>>(),
-					_sys: new Map<S, A>(),
-					_sealed: new Set<S>(),
-					_frozen: new Set<S>(),
-					_keyContracts: new Map<S, Set<S>>(),
-					_conflicts: new Map<S, A>(),
-					_conflictStrategies: new Map<S, "latest" | "fail" | "accumulate">(),
-					_causal: new Map<S, A[]>(),
-					_scopes: new Map<S, A>(),
-					_msgHandlers: new Map<S, Set<(p: A) => V>>(),
-					_lastWriteSource: new Map<S, S>(),
-					_mainMap: new Map<A, S>(),
-					_tupleCache: new Map<S, S>(),
-					_weakMap: new WeakMap<O, S>(),
-					_boundaries: new WeakMap<O, S>(),
-				};
-				masterMap.set(s, metaMap);
-			}
-			return metaMap;
-		},
-		get: <T = A,>(key: A, opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): T | UD => {
-			const { sl_reg, ms_reg, globalKey } = opts;
-			const _state = this.state.getMap(sl_reg, ms_reg, globalKey);
-			const _persistent = this.state.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+    _globalNotifyCache = new WeakMap<A, Map<A, () => void>>();
+	_notifyCache = new WeakMap<Map<A, Set<(value: A) => void>>, Map<A, () => void>>();
+	public scheduleGlobalNotify(key: string | symbol, meta: A, opts: ScopeOptions): void {
+		let cache = this._globalNotifyCache.get(meta);
+		if (!cache) {
+			cache = new Map();
+			this._globalNotifyCache.set(meta, cache);
+		}
+		let fn = cache.get(key);
+		if (!fn) {
+			fn = () => {
+				cache!.delete(key);
+				const finalVal = this.store.get(key, opts);
+				const waiters = meta._waiters.get(key);
+				if (waiters) {
+					for (const resolveFn of waiters) {
+						try {
+							resolveFn(finalVal);
+						} catch (err) {
+							console.error(`[Sauron Waiter Error]:`, err);
+						}
+					}
+					meta._waiters.delete(key);
+				}
+				for (const listener of meta._globalListeners) {
+					try {
+						listener(key, finalVal);
+					} catch (err) {
+						console.error(`[Sauron Global Listener Error]:`, err);
+					}
+				}
+			};
+			cache.set(key, fn);
+		}
+		this.onFlush(fn);
+	}
+	public scheduleNotify(key: A, _listeners: Map<A, Set<(value: A) => void>>, _state: Map<A, A>): void {
+		let cache = this._notifyCache.get(_listeners);
+		if (!cache) {
+			cache = new Map();
+			this._notifyCache.set(_listeners, cache);
+		}
+		let fn = cache.get(key);
+		if (!fn) {
+			fn = () => {
+				cache!.delete(key);
+				const val = _state.get(key);
+				_listeners.get(key)?.forEach((l) => l(val));
+			};
+			cache.set(key, fn);
+		}
+		this.onFlush(fn);
+	}
+    getMap <K, V>(slave: A = this.s, master: A = this.m, rk: A = this.r): M2<K, V>  {
+        let root = this.#context.get(rk); // (globalThis as any)[rk]  //  ; (globalThis as any)[rk] = root;
+        if (!root) {
+            root = new M2<A, M2I<A, M2I<A, A>>>();
+            this.#context.set(rk, root);
+        }
 
+        let masterMap = root.get(master);
+        if (!masterMap) {
+            masterMap = new M2<A, M2I<A, A>>();
+            root.set(master, masterMap);
+        }
+
+        let slaveMap = masterMap.get(slave);
+        if (!slaveMap) {
+            slaveMap = new M2<K, V>();
+            masterMap.set(slave, slaveMap);
+        }
+        return slaveMap;
+    }
+    getMetadata(s = this.s, m = this.m, r = this.r)  {
+        let root = this.#meta_context.get(r); //  (globalThis as A)[r]; // STATE_CONTEXT === "sauron" ?  : null;
+        if (!root) {
+            root = new M2<A, M2I<A, M2I<A, A>>>();
+            this.#meta_context.set(r, root);
+        }
+
+        let masterMap = root.get(m);
+        if (!masterMap) {
+            masterMap = new M2<A, M2I<A, A>>();
+            root.set(m, masterMap);
+        }
+
+        let metaMap = masterMap.get(s);
+        if (!metaMap) {
+            metaMap = {
+                _batches: new Set<S | SY>(),
+                _batchQueue: new Map<S | SY, A>(),
+                _batchOpts: new Map<S | SY, { triggerRender?: B }>(),
+                _history: new Map<S | SY, A[]>(),
+                _timeTravel: new Map<S | SY, N>(),
+                _globalListeners: new Set<(key: S | SY, value: A) => V>(),
+                _global_subscribers: new Map<S, Set<() => V>>(),
+                _waiters: new Map<S | SY, Set<(value: A) => V>>(),
+                _sys: new Map<S, A>(),
+                _sealed: new Set<S>(),
+                _frozen: new Set<S>(),
+                _keyContracts: new Map<S, Set<S>>(),
+                _conflicts: new Map<S, A>(),
+                _conflictStrategies: new Map<S, "latest" | "fail" | "accumulate">(),
+                _causal: new Map<S, A[]>(),
+                _scopes: new Map<S, A>(),
+                _msgHandlers: new Map<S, Set<(p: A) => V>>(),
+                _lastWriteSource: new Map<S, S>(),
+                _mainMap: new Map<A, S>(),
+                _tupleCache: new Map<S, S>(),
+                _weakMap: new WeakMap<O, S>(),
+                _boundaries: new WeakMap<O, S>(),
+            };
+            masterMap.set(s, metaMap);
+        }
+        return metaMap;
+    }
+    #hotPath = this.getMap(this.s, this.m, this.r)
+    #persistent = this.getMap(`${this.s}_PERSISTENT`, this.m, this.r)
+    #persistent_keys = this.getMap(`${this.s}_PERSIST_KEYS`, this.m, this.r)
+    #listeners = this.getMap(`${this.s}_LISTENERS`, this.m, this.r)
+	public store = {
+		get: <T = A,>(key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): T | undefined => {
+			// const { sl_reg, ms_reg, globalKey } = opts;
+			// const _state = this.#hotPath;
+			// const _persistent =  this.#persistent
+			// const _persistKeys = this.#persistent_keys
 			// recordDependency(key)
-			if (_state.has(key)) return MaybePromise(_state.get(key));
-			if (_persistKeys.has(key) && _persistent.has(key)) {
-				const v = _persistent.get(key);
-				_state.set(key, v);
+			if (this.#hotPath.has(key)) return MaybePromise(this.#hotPath.get(key));
+			if (this.#persistent_keys.has(key) && this.#persistent.has(key)) {
+				const v = this.#persistent.get(key);
+				this.#hotPath.set(key, v);
 				return MaybePromise(v);
 			}
 			return undefined;
 		},
-		set: <T = A,>(key: A, value: T | ((prev: T | UD) => T), opts: { triggerRender?: B; cap?: N } & A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r, triggerRender: true, cap: 200 }) => {
+		set: <T = A,>(key: A, value: T | ((prev: T | undefined) => T), opts: { triggerRender?: boolean; cap?: number } & ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r, triggerRender: true, cap: 200 }) => {
 			const { triggerRender = true, sl_reg, ms_reg, globalKey, cap } = opts;
-			const _state = this.state.getMap<A, A>(sl_reg, ms_reg, globalKey);
-			const _persistent = this.state.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
-			const _listeners = this.state.getMap<A, Set<(value: A) => V>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
-			const prev = _state.get(key);
-			const next = typeof value === "function" ? (value as (prev: T | UD) => T)(prev) : value;
+			// const _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+			// const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+			// const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+			// const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+			const prev = this.#hotPath.get(key);
+			const next = typeof value === "function" ? (value as (prev: T | undefined) => T)(prev) : value;
 			if (Object.is(prev, next)) return;
 			// TIME TRAVEL
 
-			if (!this.root.TIME_TRAVEL._time_travel_reverting) {
-				const meta = this.state.getMetadata(sl_reg, ms_reg, globalKey);
-				let hist = meta._history.get(key);
-				if (!hist) {
-					hist = [];
-					meta._history.set(key, hist);
-				}
-				const lastActive = hist.findLastIndex((e: A) => !e.undone) ?? -1;
-				if (lastActive < hist.length - 1) hist.length = lastActive + 1; // truncate redo tail
-				hist.push({ k: (hist[hist.length - 1]?.k ?? 0) + 1, prev, next, ts: Date.now(), undone: false });
-				const cap_val = cap ?? 200;
-				while (hist.length > cap_val) hist.shift();
-			}
-			_state.set(key, next);
-			if (_persistKeys.has(key)) _persistent.set(key, next);
-			if (triggerRender) this.state.scheduleGlobalNotify(key, this.state.getMetadata(sl_reg, ms_reg, globalKey), opts);
-			if (triggerRender) this.state.scheduleNotify(key, _listeners, _state);
+			/**if (!this.root.DRSTime._time_travel_reverting) {
+             const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+             let hist = meta._history.get(key);
+             if (!hist) {
+                 hist = [];
+                 meta._history.set(key, hist);
+             }
+             const lastActive = hist.findLastIndex((e: HistoryEntry) => !e.undone) ?? -1;
+             if (lastActive < hist.length - 1) hist.length = lastActive + 1; // truncate redo tail
+             hist.push({ k: (hist[hist.length - 1]?.k ?? 0) + 1, prev, next, ts: Date.now(), undone: false });
+             const cap_val = cap ?? 200;
+             while (hist.length > cap_val) hist.shift();
+         } */
+             this.#hotPath.set(key, next);
+			if (this.#persistent_keys.has(key)) this.#persistent.set(key, next);
+			if (triggerRender) this.scheduleGlobalNotify(key, this.getMetadata(sl_reg, ms_reg, globalKey), opts);
+			if (triggerRender) this.scheduleNotify(key, this.#listeners, this.#hotPath);
 			return MaybePromise(next as T);
 		},
-		subscribe: <T = A,>(key: A, listener: (value: T) => V, opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): (() => V) => {
+		subscribe: <T = A,>(key: A, listener: (value: T) => void, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): (() => void) => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _listeners = this.state.getMap<A, Set<(value: A) => V>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+			// const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
 
-			if (!_listeners.has(key)) _listeners.set(key, new Set());
-			_listeners.get(key)!.add(listener);
+			if (!this.#listeners.has(key)) this.#listeners.set(key, new Set());
+			this.#listeners.get(key)!.add(listener);
 			return () => {
-				_listeners.get(key)?.delete(listener);
-				if (_listeners.get(key)?.size === 0) _listeners.delete(key);
+				this.#listeners.get(key)?.delete(listener);
+				if (this.#listeners.get(key)?.size === 0) this.#listeners.delete(key);
 			};
 		},
-		delete: (key: A, opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): B => {
+		delete: (key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): boolean => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _state = this.state.getMap<A, A>(sl_reg, ms_reg, globalKey);
-			const _persistent = this.state.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
-			const _listeners = this.state.getMap<A, Set<(value: A) => V>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+			// const  _state= this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+			//const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+			// const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+			//const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
 
-			const existed = _state.delete(key);
-			if (_persistKeys.has(key)) {
-				_persistKeys.delete(key);
-				_persistent.delete(key);
+			const existed = this.#hotPath.delete(key);
+			if (this.#persistent_keys.has(key)) {
+				this.#persistent_keys.delete(key);
+				this.#persistent.delete(key);
 			}
-			_listeners.get(key)?.forEach((l) => l(undefined));
-			_listeners.delete(key);
+			this.#listeners.get(key)?.forEach((l) => l(undefined));
+			this.#listeners.delete(key);
 			return MaybePromise(existed);
 		},
-		entries: <T = A,>(opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): [A, T][] => {
+		entries: <T = A,>(opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): [A, T][] => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _state = this.state.getMap<A, A>(sl_reg, ms_reg, globalKey);
-			return MaybePromise(Array.from(_state.entries()));
+		//	const  _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+			return MaybePromise(Array.from(this.#hotPath.entries()));
 		},
-		persist: (key: A, opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): V => {
+		persist: (key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): void => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
-			_persistKeys.set(key, true);
+			//const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+            this.#persistent_keys.set(key, true);
 		},
-		unpersist: (key: A, opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): V => {
+		unpersist: (key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): void => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _persistent = this.state.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
-			_persistKeys.delete(key);
-			_persistent.delete(key);
+			//const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+			//const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+			this.#persistent_keys.delete(key);
+			this.#persistent.delete(key);
 		},
-		has: (key: A, opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): B => {
+		has: (key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): boolean => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _state = this.state.getMap<A, A>(sl_reg, ms_reg, globalKey);
-			const _persistent = this.state.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+			//const  _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+			//const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+			//const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
 
-			return _state.has(key) || (_persistKeys.has(key) && _persistent.has(key));
+			return this.#hotPath.has(key) || (this.#persistent_keys.has(key) && this.#persistent.has(key));
 		},
-		clear: (opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): V => {
+		clear: (opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): void => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _state = this.state.getMap<A, A>(sl_reg, ms_reg, globalKey);
-			const _listeners = this.state.getMap<A, Set<(value: A) => V>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
-			_state.clear();
-			_listeners.clear();
+			//const  _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+			//const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+			this.#hotPath.clear();
+			this.#listeners.clear();
 		},
-		clearPersistent: (opts: A = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): V => {
+		clearPersistent: (opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): void => {
 			const { sl_reg, ms_reg, globalKey } = opts;
-			const _persistent = this.state.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
-			const _persistKeys = this.state.getMap<A, B>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
-			_persistent.clear();
-			_persistKeys.clear();
+			//const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+			//const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+			this.#persistent.clear();
+			this.#persistent_keys.clear();
 		},
-		_emit: (key: S | SY, sl_reg = this.s, ms_reg = this.m, globalKey = this.r): V => {
+		_emit: (key: string | symbol, sl_reg = this.s, ms_reg = this.m, globalKey = this.r): void => {
 			const opts = { sl_reg, ms_reg, globalKey };
-			const _state = this.state.getMap(sl_reg, ms_reg, globalKey);
-			const _listeners = this.state.getMap<A, Set<(value: A) => V>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
-			const meta = this.state.getMetadata(sl_reg, ms_reg, globalKey);
-			this.state.scheduleNotify(key, _listeners, _state);
-			this.state.scheduleGlobalNotify(key, meta, opts);
+			//const  _state = this.getMap(sl_reg, ms_reg, globalKey);
+			//const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+			const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+			this.scheduleNotify(key, this.#listeners, this.#hotPath);
+			this.scheduleGlobalNotify(key, meta, opts);
 		},
-		scheduleNotify: (key: A, _listeners: Map<A, Set<(value: A) => V>>, _state: Map<A, A>): V =>{
-			let cache = this.#notify_context.get(_listeners);
-			if (!cache) {
-				cache = new Map();
-				this.#notify_context.set(_listeners, cache);
-			}
-			let fn = cache.get(key);
-			if (!fn) {
-				fn = () => {
-					cache!.delete(key);
-					const val = _state.get(key);
-					_listeners.get(key)?.forEach((l) => l(val));
-				};
-				cache.set(key, fn);
-			}
-			this.onFlush(fn);
+	};
+	public state = {
+		get: <T = A,>(key: string | symbol, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): T | undefined => {
+			return MaybePromise(this.store.get<T>(key, opts) as T);
 		},
-		scheduleGlobalNotify :(key: S | SY, meta: A, opts: A): V => {
-			let cache = this.#global_notify_context.get(meta);
-			if (!cache) {
-				cache = new Map();
-				this.#global_notify_context.set(meta, cache);
-			}
-			let fn = cache.get(key);
-			if (!fn) {
-				fn = () => {
-					cache!.delete(key);
-					const finalVal = this.state.get(key, opts);
-					const waiters = meta._waiters.get(key);
-					if (waiters) {
-						for (const resolveFn of waiters) {
-							try {
-								resolveFn(finalVal);
-							} catch (err) {
-								console.error(`[Sauron Waiter Error]:`, err);
-							}
-						}
-						meta._waiters.delete(key);
+		set: <T = A,>(key: string | symbol, value: T | ((prev: T | undefined) => T), opts: { triggerRender?: boolean } & ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): void => {
+			const { sl_reg, ms_reg, globalKey, triggerRender = true } = opts;
+			this.store.set(key, value, { triggerRender, sl_reg, ms_reg, globalKey });
+			return MaybePromise(value as T);
+		},
+		delete: (key: string | symbol, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): boolean => {
+			const { sl_reg, ms_reg, globalKey } = opts;
+			const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+			const deleted = this.store.delete(key, opts);
+			if (deleted) {
+				for (const listener of meta._globalListeners) {
+					try {
+						listener(key, undefined);
+					} catch (err) {
+						console.error(`[Sauron Global Listener Error]:`, err);
 					}
-					for (const listener of meta._globalListeners) {
-						try {
-							listener(key, finalVal);
-						} catch (err) {
-							console.error(`[Sauron Global Listener Error]:`, err);
-						}
-					}
-				};
-				cache.set(key, fn);
+				}
 			}
-			this.onFlush(fn);
+			return deleted;
+		},
+		getByPrefix: <T = A,>(prefix: string, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): { key: string; value: T }[] => {
+			return this.store
+				.entries<T>(opts)
+				.filter(([key]) => typeof key === "string" && key.startsWith(prefix))
+				.map(([key, value]) => ({ key: key as string, value }));
+		},
+		getAll: <T = A,>(opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): Record<string | symbol, T> => {
+			const result: Record<string | symbol, T> = {};
+			for (const [key, value] of this.store.entries<T>(opts)) {
+				result[key] = value;
+			}
+			return result;
+		},
+		subscribe: <T = A,>(key: string | symbol, listener: (value: T) => void, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): (() => void) => {
+			return this.store.subscribe<T>(key, listener, opts);
+		},
+		subscribeAll: (listener: (key: string | symbol, value: A) => void, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): (() => void) => {
+			const { sl_reg, ms_reg, globalKey } = opts;
+			const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+			meta._globalListeners.add(listener);
+			return () => {
+				meta._globalListeners.delete(listener);
+			};
+		},
+		clear: (opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): void => {
+			const { sl_reg, ms_reg, globalKey } = opts;
+			const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+			this.store.clear(opts);
+			meta._waiters.clear();
+			meta._globalListeners.clear();
+		},
+		waitFor: <T = A,>(key: string | symbol, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): Promise<T> => {
+			const { sl_reg, ms_reg, globalKey } = opts;
+			const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+
+			// If it already exists, resolve immediately
+			const existing = this.state.get<T>(key, opts);
+			if (existing !== undefined) return Promise.resolve(existing);
+
+			return new Promise<T>((resolve) => {
+				if (!meta._waiters.has(key)) meta._waiters.set(key, new Set());
+				meta._waiters.get(key)!.add(resolve as A);
+			});
 		},
 	};
 	public onFlush(cb: FlushCallback): void {
