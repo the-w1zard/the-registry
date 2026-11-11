@@ -211,13 +211,13 @@ export class Registry extends EventEmitter {
 	//                                                                                           [CONSTANTS]
 	// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 	#waiters = new M2<S, SET2<A>>(); // { key, predicate, resolve, reject, timer }
-	#data = new M2();
-	#subs = new M2(); // key -> Set<fn>   (key-specific)
+	#data = new M2<A, A>();
+	#subs = new M2<A, A>(); // key -> Set<fn>   (key-specific)
 	#any_subs = new SET2(); // global watchers
 	#frozen = false;
 
-	#context = new M2();
-	#meta_context = new M2();
+	#context = new M2<A, A>();
+	#meta_context = new M2<A, A>();
 	#global_notify_context = new WeakMap<A, Map<A, () => V>>();
 	#notify_context = new WeakMap<Map<A, Set<(value: A) => V>>, Map<A, () => V>>();
 
@@ -278,7 +278,7 @@ export class Registry extends EventEmitter {
 		}
 		this.onFlush(fn);
 	}
-	public scheduleNotify(key: A, _listeners: Map<A, Set<(value: A) => void>>, _state: Map<A, A>): void {
+	public scheduleNotify(key: A, _listeners: M2<A, Set<(value: A) => void>>, _state: Map<A, A>): void {
 		let cache = this._notifyCache.get(_listeners);
 		if (!cache) {
 			cache = new Map();
@@ -361,9 +361,9 @@ export class Registry extends EventEmitter {
     #hotPath = this.getMap(this.s, this.m, this.r)
     #persistent = this.getMap(`${this.s}_PERSISTENT`, this.m, this.r)
     #persistent_keys = this.getMap(`${this.s}_PERSIST_KEYS`, this.m, this.r)
-    #listeners = this.getMap(`${this.s}_LISTENERS`, this.m, this.r)
+    #listeners = this.getMap<any, Set<(value: any) => void>>(`${this.s}_LISTENERS`, this.m, this.r)
 	public store = {
-		get: <T = A,>(key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): T | undefined => {
+		get: <T = A>(key: A, opts: ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r }): T | undefined => {
 			// const { sl_reg, ms_reg, globalKey } = opts;
 			// const _state = this.#hotPath;
 			// const _persistent =  this.#persistent
@@ -377,14 +377,14 @@ export class Registry extends EventEmitter {
 			}
 			return undefined;
 		},
-		set: <T = A,>(key: A, value: T | ((prev: T | undefined) => T), opts: { triggerRender?: boolean; cap?: number } & ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r, triggerRender: true, cap: 200 }) => {
+		set: <T = A>(key: A, value: T | ((prev: T | undefined) => T), opts: { triggerRender?: boolean; cap?: number } & ScopeOptions = { sl_reg: this.s, ms_reg: this.m, globalKey: this.r, triggerRender: true, cap: 200 }) => {
 			const { triggerRender = true, sl_reg, ms_reg, globalKey, cap } = opts;
 			// const _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
 			// const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
 			// const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
 			// const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
 			const prev = this.#hotPath.get(key);
-			const next = typeof value === "function" ? (value as (prev: T | undefined) => T)(prev) : value;
+			const next =  typeof value === "function" ? (value as (prev: T | undefined) => T)(prev as T | undefined) : value;
 			if (Object.is(prev, next)) return;
 			// TIME TRAVEL
 
@@ -621,15 +621,19 @@ export class Registry extends EventEmitter {
 				this.#any_subs.delete(fn);
 			};
 		}
-		const key = keyOrFn;
-		// iterator form: no maybeFn, or second arg is an options object
-		if (maybeFn === undefined || (typeof maybeFn === "object" && maybeFn !== null)) {
-			const iteratorOpts = (typeof maybeFn === "object" && maybeFn) || opts;
-			return this.#asIterator(key, iteratorOpts);
-		}
+        const key = keyOrFn;
 
-		// callback form
-		const fn = maybeFn;
+        const maybeFnIsObject =
+          maybeFn !== undefined &&
+          typeof maybeFn === "object" &&
+          maybeFn !== null;
+        
+        if (maybeFn === undefined || maybeFnIsObject) {
+          const iteratorOpts = maybeFnIsObject ? maybeFn : opts;
+          return this.#asIterator(key, iteratorOpts);
+        }
+        
+        const fn = maybeFn as (value: A, prev: A, key: S) => V;
 		let set = this.#subs.getOrM(  () => new SET2(), key);
 		set.add(fn);
 		if (opts.immediate && this.#data.has(key)) {

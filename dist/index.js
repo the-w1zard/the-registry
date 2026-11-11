@@ -3691,12 +3691,11 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     };
                 }
                 var key = keyOrFn;
-                // iterator form: no maybeFn, or second arg is an options object
-                if (maybeFn === undefined || (typeof maybeFn === "undefined" ? "undefined" : _type_of(maybeFn)) === "object" && maybeFn !== null) {
-                    var iteratorOpts = (typeof maybeFn === "undefined" ? "undefined" : _type_of(maybeFn)) === "object" && maybeFn || opts;
+                var maybeFnIsObject = maybeFn !== undefined && (typeof maybeFn === "undefined" ? "undefined" : _type_of(maybeFn)) === "object" && maybeFn !== null;
+                if (maybeFn === undefined || maybeFnIsObject) {
+                    var iteratorOpts = maybeFnIsObject ? maybeFn : opts;
                     return _class_private_method_get(this, _asIterator, asIterator).call(this, key, iteratorOpts);
                 }
-                // callback form
                 var fn1 = maybeFn;
                 var set = _class_private_field_get(this, _subs).getOrM(function() {
                     return new SET2();

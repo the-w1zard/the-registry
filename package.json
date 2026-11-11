@@ -6,7 +6,7 @@
     "main": "./dist/index.js",
     "exports": {
         ".": {
-            "types": "./src/index.d.ts",
+            "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
         }
     },
@@ -15,7 +15,7 @@
         "./src/index.d.ts"
     ],
     "scripts": {
-        "build": "rspack build",
+        "build": "tsc --emitDeclarationOnly && rspack build",
         "build1": "rspack build",
         "dev": "rspack serve",
         "check": "tsc --noEmit"
