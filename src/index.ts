@@ -207,7 +207,7 @@ class Rift<T = A> implements RiftLike<T> {
     get isClaimed() { return this.claimed; }
     get current(): T | undefined { return this.value; }
 }
-class Registry extends EventEmitter {
+export class Registry extends EventEmitter {
 	//                                                                                           [CONSTANTS]
 	// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 	#waiters = new M2<S, SET2<A>>(); // { key, predicate, resolve, reject, timer }
@@ -2180,5 +2180,3 @@ class Registry extends EventEmitter {
    })();
    // #endregion
 }
-
-export { Registry };

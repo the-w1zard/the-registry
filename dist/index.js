@@ -841,7 +841,7 @@ var src_Rift = /*#__PURE__*/ function() {
     return Rift;
 }();
 var // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-_waiters = /*#__PURE__*/ new WeakMap(), _data = /*#__PURE__*/ new WeakMap(), _subs = /*#__PURE__*/ new WeakMap(), _any_subs = /*#__PURE__*/ new WeakMap(), _frozen = /*#__PURE__*/ new WeakMap(), _context = /*#__PURE__*/ new WeakMap(), _meta_context = /*#__PURE__*/ new WeakMap(), _global_notify_context = /*#__PURE__*/ new WeakMap(), _notify_context = /*#__PURE__*/ new WeakMap(), _counter = /*#__PURE__*/ new WeakMap(), _epoch = /*#__PURE__*/ new WeakMap(), _asIterator = /*#__PURE__*/ new WeakSet(), _notify = /*#__PURE__*/ new WeakSet(), //                                                                                                [SLAB]
+_waiters = /*#__PURE__*/ new WeakMap(), _data = /*#__PURE__*/ new WeakMap(), _subs = /*#__PURE__*/ new WeakMap(), _any_subs = /*#__PURE__*/ new WeakMap(), _frozen = /*#__PURE__*/ new WeakMap(), _context = /*#__PURE__*/ new WeakMap(), _meta_context = /*#__PURE__*/ new WeakMap(), _global_notify_context = /*#__PURE__*/ new WeakMap(), _notify_context = /*#__PURE__*/ new WeakMap(), _counter = /*#__PURE__*/ new WeakMap(), _epoch = /*#__PURE__*/ new WeakMap(), _hotPath = /*#__PURE__*/ new WeakMap(), _persistent = /*#__PURE__*/ new WeakMap(), _persistent_keys = /*#__PURE__*/ new WeakMap(), src_listeners = /*#__PURE__*/ new WeakMap(), _asIterator = /*#__PURE__*/ new WeakSet(), _notify = /*#__PURE__*/ new WeakSet(), //                                                                                                [SLAB]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 _rifts = /*#__PURE__*/ new WeakMap(), _deferTasks = /*#__PURE__*/ new WeakMap(), _multiWaiters = /*#__PURE__*/ new WeakMap();
 var src_Registry = /*#__PURE__*/ function(EventEmitter) {
@@ -887,85 +887,36 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
         }), _class_private_field_init(_this, _epoch, {
             writable: true,
             value: 0
-        }), _define_property(_this, "r", "_root_"), _define_property(_this, "m", "_master_"), _define_property(_this, "s", "_slave_"), _define_property(_this, "DEVTOOLS_ACTIVE", false), //                                                                                               [STATE]
+        }), _define_property(_this, "r", "THE_WIZARD_ROOT_REG"), _define_property(_this, "m", "SAURON_MASTER_REG"), _define_property(_this, "s", "SAURON_SLAVE_REG"), _define_property(_this, "DEVTOOLS_ACTIVE", false), //                                                                                               [STATE]
         // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-        _define_property(_this, "state", {
-            getMap: function getMap() {
-                var slave = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : _this.s, master = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : _this.m, rk = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : _this.r;
-                var root = _class_private_field_get(_this, _context).get(rk); // (globalThis as any)[rk]  //  ; (globalThis as any)[rk] = root;
-                if (!root) {
-                    root = new M2();
-                    _class_private_field_get(_this, _context).set(rk, root);
-                }
-                var masterMap = root.get(master);
-                if (!masterMap) {
-                    masterMap = new M2();
-                    root.set(master, masterMap);
-                }
-                var slaveMap = masterMap.get(slave);
-                if (!slaveMap) {
-                    slaveMap = new M2();
-                    masterMap.set(slave, slaveMap);
-                }
-                return slaveMap;
-            },
-            getMetadata: function getMetadata() {
-                var s = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : _this.s, m = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : _this.m, r = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : _this.r;
-                var root = _class_private_field_get(_this, _meta_context).get(r); //  (globalThis as A)[r]; // STATE_CONTEXT === "sauron" ?  : null;
-                if (!root) {
-                    root = new M2();
-                    _class_private_field_get(_this, _meta_context).set(r, root);
-                }
-                var masterMap = root.get(m);
-                if (!masterMap) {
-                    masterMap = new M2();
-                    root.set(m, masterMap);
-                }
-                var metaMap = masterMap.get(s);
-                if (!metaMap) {
-                    metaMap = {
-                        _batches: new Set(),
-                        _batchQueue: new Map(),
-                        _batchOpts: new Map(),
-                        _history: new Map(),
-                        _timeTravel: new Map(),
-                        _globalListeners: new Set(),
-                        _global_subscribers: new Map(),
-                        _waiters: new Map(),
-                        _sys: new Map(),
-                        _sealed: new Set(),
-                        _frozen: new Set(),
-                        _keyContracts: new Map(),
-                        _conflicts: new Map(),
-                        _conflictStrategies: new Map(),
-                        _causal: new Map(),
-                        _scopes: new Map(),
-                        _msgHandlers: new Map(),
-                        _lastWriteSource: new Map(),
-                        _mainMap: new Map(),
-                        _tupleCache: new Map(),
-                        _weakMap: new WeakMap(),
-                        _boundaries: new WeakMap()
-                    };
-                    masterMap.set(s, metaMap);
-                }
-                return metaMap;
-            },
+        _define_property(_this, "_globalNotifyCache", new WeakMap()), _define_property(_this, "_notifyCache", new WeakMap()), _class_private_field_init(_this, _hotPath, {
+            writable: true,
+            value: _this.getMap(_this.s, _this.m, _this.r)
+        }), _class_private_field_init(_this, _persistent, {
+            writable: true,
+            value: _this.getMap("".concat(_this.s, "_PERSISTENT"), _this.m, _this.r)
+        }), _class_private_field_init(_this, _persistent_keys, {
+            writable: true,
+            value: _this.getMap("".concat(_this.s, "_PERSIST_KEYS"), _this.m, _this.r)
+        }), _class_private_field_init(_this, src_listeners, {
+            writable: true,
+            value: _this.getMap("".concat(_this.s, "_LISTENERS"), _this.m, _this.r)
+        }), _define_property(_this, "store", {
             get: function get(key) {
                 var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
                     sl_reg: _this.s,
                     ms_reg: _this.m,
                     globalKey: _this.r
                 };
-                var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                var _persistent = _this.state.getMap("".concat(sl_reg, "_PERSISTENT"), ms_reg, globalKey);
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
+                // const { sl_reg, ms_reg, globalKey } = opts;
+                // const _state = this.#hotPath;
+                // const _persistent =  this.#persistent
+                // const _persistKeys = this.#persistent_keys
                 // recordDependency(key)
-                if (_state.has(key)) return MaybePromise(_state.get(key));
-                if (_persistKeys.has(key) && _persistent.has(key)) {
-                    var v = _persistent.get(key);
-                    _state.set(key, v);
+                if (_class_private_field_get(_this, _hotPath).has(key)) return MaybePromise(_class_private_field_get(_this, _hotPath).get(key));
+                if (_class_private_field_get(_this, _persistent_keys).has(key) && _class_private_field_get(_this, _persistent).has(key)) {
+                    var v = _class_private_field_get(_this, _persistent).get(key);
+                    _class_private_field_get(_this, _hotPath).set(key, v);
                     return MaybePromise(v);
                 }
                 return undefined;
@@ -979,41 +930,30 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     cap: 200
                 };
                 var _opts_triggerRender = opts.triggerRender, triggerRender = _opts_triggerRender === void 0 ? true : _opts_triggerRender, sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey, cap = opts.cap;
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                var _persistent = _this.state.getMap("".concat(sl_reg, "_PERSISTENT"), ms_reg, globalKey);
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
-                var _listeners = _this.state.getMap("".concat(sl_reg, "_LISTENERS"), ms_reg, globalKey);
-                var prev = _state.get(key);
+                // const _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+                // const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+                // const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+                // const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+                var prev = _class_private_field_get(_this, _hotPath).get(key);
                 var next = typeof value === "function" ? value(prev) : value;
                 if (Object.is(prev, next)) return;
                 // TIME TRAVEL
-                if (!_this.root.TIME_TRAVEL._time_travel_reverting) {
-                    var _hist_findLastIndex, _ref;
-                    var _hist_;
-                    var meta = _this.state.getMetadata(sl_reg, ms_reg, globalKey);
-                    var hist = meta._history.get(key);
-                    if (!hist) {
-                        hist = [];
-                        meta._history.set(key, hist);
-                    }
-                    var lastActive = (_hist_findLastIndex = hist.findLastIndex(function(e) {
-                        return !e.undone;
-                    })) !== null && _hist_findLastIndex !== void 0 ? _hist_findLastIndex : -1;
-                    if (lastActive < hist.length - 1) hist.length = lastActive + 1; // truncate redo tail
-                    hist.push({
-                        k: ((_ref = (_hist_ = hist[hist.length - 1]) === null || _hist_ === void 0 ? void 0 : _hist_.k) !== null && _ref !== void 0 ? _ref : 0) + 1,
-                        prev: prev,
-                        next: next,
-                        ts: Date.now(),
-                        undone: false
-                    });
-                    var cap_val = cap !== null && cap !== void 0 ? cap : 200;
-                    while(hist.length > cap_val)hist.shift();
-                }
-                _state.set(key, next);
-                if (_persistKeys.has(key)) _persistent.set(key, next);
-                if (triggerRender) _this.state.scheduleGlobalNotify(key, _this.state.getMetadata(sl_reg, ms_reg, globalKey), opts);
-                if (triggerRender) _this.state.scheduleNotify(key, _listeners, _state);
+                /**if (!this.root.DRSTime._time_travel_reverting) {
+             const meta = this.getMetadata(sl_reg, ms_reg, globalKey);
+             let hist = meta._history.get(key);
+             if (!hist) {
+                 hist = [];
+                 meta._history.set(key, hist);
+             }
+             const lastActive = hist.findLastIndex((e: HistoryEntry) => !e.undone) ?? -1;
+             if (lastActive < hist.length - 1) hist.length = lastActive + 1; // truncate redo tail
+             hist.push({ k: (hist[hist.length - 1]?.k ?? 0) + 1, prev, next, ts: Date.now(), undone: false });
+             const cap_val = cap ?? 200;
+             while (hist.length > cap_val) hist.shift();
+         } */ _class_private_field_get(_this, _hotPath).set(key, next);
+                if (_class_private_field_get(_this, _persistent_keys).has(key)) _class_private_field_get(_this, _persistent).set(key, next);
+                if (triggerRender) _this.scheduleGlobalNotify(key, _this.getMetadata(sl_reg, ms_reg, globalKey), opts);
+                if (triggerRender) _this.scheduleNotify(key, _class_private_field_get(_this, src_listeners), _class_private_field_get(_this, _hotPath));
                 return MaybePromise(next);
             },
             subscribe: function subscribe(key, listener) {
@@ -1023,13 +963,13 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _listeners = _this.state.getMap("".concat(sl_reg, "_LISTENERS"), ms_reg, globalKey);
-                if (!_listeners.has(key)) _listeners.set(key, new Set());
-                _listeners.get(key).add(listener);
+                // const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+                if (!_class_private_field_get(_this, src_listeners).has(key)) _class_private_field_get(_this, src_listeners).set(key, new Set());
+                _class_private_field_get(_this, src_listeners).get(key).add(listener);
                 return function() {
-                    var _listeners_get, _listeners_get1;
-                    (_listeners_get = _listeners.get(key)) === null || _listeners_get === void 0 ? void 0 : _listeners_get.delete(listener);
-                    if (((_listeners_get1 = _listeners.get(key)) === null || _listeners_get1 === void 0 ? void 0 : _listeners_get1.size) === 0) _listeners.delete(key);
+                    var _class_private_field_get_get, _class_private_field_get_get1;
+                    (_class_private_field_get_get = _class_private_field_get(_this, src_listeners).get(key)) === null || _class_private_field_get_get === void 0 ? void 0 : _class_private_field_get_get.delete(listener);
+                    if (((_class_private_field_get_get1 = _class_private_field_get(_this, src_listeners).get(key)) === null || _class_private_field_get_get1 === void 0 ? void 0 : _class_private_field_get_get1.size) === 0) _class_private_field_get(_this, src_listeners).delete(key);
                 };
             },
             delete: function _delete(key) {
@@ -1038,21 +978,21 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     ms_reg: _this.m,
                     globalKey: _this.r
                 };
-                var _listeners_get;
+                var _class_private_field_get_get;
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                var _persistent = _this.state.getMap("".concat(sl_reg, "_PERSISTENT"), ms_reg, globalKey);
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
-                var _listeners = _this.state.getMap("".concat(sl_reg, "_LISTENERS"), ms_reg, globalKey);
-                var existed = _state.delete(key);
-                if (_persistKeys.has(key)) {
-                    _persistKeys.delete(key);
-                    _persistent.delete(key);
+                // const  _state= this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+                //const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+                // const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+                //const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+                var existed = _class_private_field_get(_this, _hotPath).delete(key);
+                if (_class_private_field_get(_this, _persistent_keys).has(key)) {
+                    _class_private_field_get(_this, _persistent_keys).delete(key);
+                    _class_private_field_get(_this, _persistent).delete(key);
                 }
-                (_listeners_get = _listeners.get(key)) === null || _listeners_get === void 0 ? void 0 : _listeners_get.forEach(function(l) {
+                (_class_private_field_get_get = _class_private_field_get(_this, src_listeners).get(key)) === null || _class_private_field_get_get === void 0 ? void 0 : _class_private_field_get_get.forEach(function(l) {
                     return l(undefined);
                 });
-                _listeners.delete(key);
+                _class_private_field_get(_this, src_listeners).delete(key);
                 return MaybePromise(existed);
             },
             entries: function entries() {
@@ -1062,8 +1002,8 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                return MaybePromise(Array.from(_state.entries()));
+                //	const  _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+                return MaybePromise(Array.from(_class_private_field_get(_this, _hotPath).entries()));
             },
             persist: function persist(key) {
                 var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
@@ -1072,8 +1012,8 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
-                _persistKeys.set(key, true);
+                //const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+                _class_private_field_get(_this, _persistent_keys).set(key, true);
             },
             unpersist: function unpersist(key) {
                 var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
@@ -1082,10 +1022,10 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _persistent = _this.state.getMap("".concat(sl_reg, "_PERSISTENT"), ms_reg, globalKey);
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
-                _persistKeys.delete(key);
-                _persistent.delete(key);
+                //const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+                //const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+                _class_private_field_get(_this, _persistent_keys).delete(key);
+                _class_private_field_get(_this, _persistent).delete(key);
             },
             has: function has(key) {
                 var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
@@ -1094,10 +1034,10 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                var _persistent = _this.state.getMap("".concat(sl_reg, "_PERSISTENT"), ms_reg, globalKey);
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
-                return _state.has(key) || _persistKeys.has(key) && _persistent.has(key);
+                //const  _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+                //const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+                //const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+                return _class_private_field_get(_this, _hotPath).has(key) || _class_private_field_get(_this, _persistent_keys).has(key) && _class_private_field_get(_this, _persistent).has(key);
             },
             clear: function clear() {
                 var opts = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {
@@ -1106,10 +1046,10 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                var _listeners = _this.state.getMap("".concat(sl_reg, "_LISTENERS"), ms_reg, globalKey);
-                _state.clear();
-                _listeners.clear();
+                //const  _state = this.getMap<A, A>(sl_reg, ms_reg, globalKey);
+                //const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+                _class_private_field_get(_this, _hotPath).clear();
+                _class_private_field_get(_this, src_listeners).clear();
             },
             clearPersistent: function clearPersistent() {
                 var opts = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {
@@ -1118,10 +1058,10 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     globalKey: _this.r
                 };
                 var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
-                var _persistent = _this.state.getMap("".concat(sl_reg, "_PERSISTENT"), ms_reg, globalKey);
-                var _persistKeys = _this.state.getMap("".concat(sl_reg, "_PERSIST_KEYS"), ms_reg, globalKey);
-                _persistent.clear();
-                _persistKeys.clear();
+                //const _persistent = this.getMap<A, A>(`${sl_reg}_PERSISTENT`, ms_reg, globalKey);
+                //const _persistKeys = this.getMap<A, boolean>(`${sl_reg}_PERSIST_KEYS`, ms_reg, globalKey);
+                _class_private_field_get(_this, _persistent).clear();
+                _class_private_field_get(_this, _persistent_keys).clear();
             },
             _emit: function _emit(key) {
                 var sl_reg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : _this.s, ms_reg = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : _this.m, globalKey = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : _this.r;
@@ -1130,99 +1070,167 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
                     ms_reg: ms_reg,
                     globalKey: globalKey
                 };
-                var _state = _this.state.getMap(sl_reg, ms_reg, globalKey);
-                var _listeners = _this.state.getMap("".concat(sl_reg, "_LISTENERS"), ms_reg, globalKey);
-                var meta = _this.state.getMetadata(sl_reg, ms_reg, globalKey);
-                _this.state.scheduleNotify(key, _listeners, _state);
-                _this.state.scheduleGlobalNotify(key, meta, opts);
+                //const  _state = this.getMap(sl_reg, ms_reg, globalKey);
+                //const _listeners = this.getMap<A, Set<(value: A) => void>>(`${sl_reg}_LISTENERS`, ms_reg, globalKey);
+                var meta = _this.getMetadata(sl_reg, ms_reg, globalKey);
+                _this.scheduleNotify(key, _class_private_field_get(_this, src_listeners), _class_private_field_get(_this, _hotPath));
+                _this.scheduleGlobalNotify(key, meta, opts);
+            }
+        }), _define_property(_this, "state", {
+            get: function get(key) {
+                var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                return MaybePromise(_this.store.get(key, opts));
             },
-            scheduleNotify: function scheduleNotify(key, _listeners, _state) {
-                var cache = _class_private_field_get(_this, _notify_context).get(_listeners);
-                if (!cache) {
-                    cache = new Map();
-                    _class_private_field_get(_this, _notify_context).set(_listeners, cache);
-                }
-                var fn = cache.get(key);
-                if (!fn) {
-                    fn = function fn() {
-                        var _listeners_get;
-                        cache.delete(key);
-                        var val = _state.get(key);
-                        (_listeners_get = _listeners.get(key)) === null || _listeners_get === void 0 ? void 0 : _listeners_get.forEach(function(l) {
-                            return l(val);
-                        });
-                    };
-                    cache.set(key, fn);
-                }
-                _this.onFlush(fn);
+            set: function set(key, value) {
+                var opts = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey, _opts_triggerRender = opts.triggerRender, triggerRender = _opts_triggerRender === void 0 ? true : _opts_triggerRender;
+                _this.store.set(key, value, {
+                    triggerRender: triggerRender,
+                    sl_reg: sl_reg,
+                    ms_reg: ms_reg,
+                    globalKey: globalKey
+                });
+                return MaybePromise(value);
             },
-            scheduleGlobalNotify: function scheduleGlobalNotify(key, meta, opts) {
-                var cache = _class_private_field_get(_this, _global_notify_context).get(meta);
-                if (!cache) {
-                    cache = new Map();
-                    _class_private_field_get(_this, _global_notify_context).set(meta, cache);
-                }
-                var fn = cache.get(key);
-                if (!fn) {
-                    fn = function fn() {
-                        cache.delete(key);
-                        var finalVal = _this.state.get(key, opts);
-                        var waiters = meta._waiters.get(key);
-                        if (waiters) {
-                            var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+            delete: function _delete(key) {
+                var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
+                var meta = _this.getMetadata(sl_reg, ms_reg, globalKey);
+                var deleted = _this.store.delete(key, opts);
+                if (deleted) {
+                    var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+                    try {
+                        for(var _iterator = meta._globalListeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                            var listener = _step.value;
                             try {
-                                for(var _iterator = waiters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
-                                    var resolveFn = _step.value;
-                                    try {
-                                        resolveFn(finalVal);
-                                    } catch (err) {
-                                        console.error("[Sauron Waiter Error]:", err);
-                                    }
-                                }
+                                listener(key, undefined);
                             } catch (err) {
-                                _didIteratorError = true;
-                                _iteratorError = err;
-                            } finally{
-                                try {
-                                    if (!_iteratorNormalCompletion && _iterator.return != null) {
-                                        _iterator.return();
-                                    }
-                                } finally{
-                                    if (_didIteratorError) {
-                                        throw _iteratorError;
-                                    }
-                                }
+                                console.error("[Sauron Global Listener Error]:", err);
                             }
-                            meta._waiters.delete(key);
                         }
-                        var _iteratorNormalCompletion1 = true, _didIteratorError1 = false, _iteratorError1 = undefined;
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally{
                         try {
-                            for(var _iterator1 = meta._globalListeners[Symbol.iterator](), _step1; !(_iteratorNormalCompletion1 = (_step1 = _iterator1.next()).done); _iteratorNormalCompletion1 = true){
-                                var listener = _step1.value;
-                                try {
-                                    listener(key, finalVal);
-                                } catch (err) {
-                                    console.error("[Sauron Global Listener Error]:", err);
-                                }
+                            if (!_iteratorNormalCompletion && _iterator.return != null) {
+                                _iterator.return();
                             }
-                        } catch (err) {
-                            _didIteratorError1 = true;
-                            _iteratorError1 = err;
                         } finally{
-                            try {
-                                if (!_iteratorNormalCompletion1 && _iterator1.return != null) {
-                                    _iterator1.return();
-                                }
-                            } finally{
-                                if (_didIteratorError1) {
-                                    throw _iteratorError1;
-                                }
+                            if (_didIteratorError) {
+                                throw _iteratorError;
                             }
                         }
-                    };
-                    cache.set(key, fn);
+                    }
                 }
-                _this.onFlush(fn);
+                return deleted;
+            },
+            getByPrefix: function getByPrefix(prefix) {
+                var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                return _this.store.entries(opts).filter(function(param) {
+                    var _param = _sliced_to_array(param, 1), key = _param[0];
+                    return typeof key === "string" && key.startsWith(prefix);
+                }).map(function(param) {
+                    var _param = _sliced_to_array(param, 2), key = _param[0], value = _param[1];
+                    return {
+                        key: key,
+                        value: value
+                    };
+                });
+            },
+            getAll: function getAll() {
+                var opts = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                var result = {};
+                var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+                try {
+                    for(var _iterator = _this.store.entries(opts)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                        var _step_value = _sliced_to_array(_step.value, 2), key = _step_value[0], value = _step_value[1];
+                        result[key] = value;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally{
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return != null) {
+                            _iterator.return();
+                        }
+                    } finally{
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+                return result;
+            },
+            subscribe: function subscribe(key, listener) {
+                var opts = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                return _this.store.subscribe(key, listener, opts);
+            },
+            subscribeAll: function subscribeAll(listener) {
+                var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
+                var meta = _this.getMetadata(sl_reg, ms_reg, globalKey);
+                meta._globalListeners.add(listener);
+                return function() {
+                    meta._globalListeners.delete(listener);
+                };
+            },
+            clear: function clear() {
+                var opts = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
+                var meta = _this.getMetadata(sl_reg, ms_reg, globalKey);
+                _this.store.clear(opts);
+                meta._waiters.clear();
+                meta._globalListeners.clear();
+            },
+            waitFor: function waitFor(key) {
+                var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
+                    sl_reg: _this.s,
+                    ms_reg: _this.m,
+                    globalKey: _this.r
+                };
+                var sl_reg = opts.sl_reg, ms_reg = opts.ms_reg, globalKey = opts.globalKey;
+                var meta = _this.getMetadata(sl_reg, ms_reg, globalKey);
+                // If it already exists, resolve immediately
+                var existing = _this.state.get(key, opts);
+                if (existing !== undefined) return Promise.resolve(existing);
+                return new Promise(function(resolve) {
+                    if (!meta._waiters.has(key)) meta._waiters.set(key, new Set());
+                    meta._waiters.get(key).add(resolve);
+                });
             }
         }), _class_private_field_init(_this, _rifts, {
             writable: true,
@@ -3402,6 +3410,168 @@ var src_Registry = /*#__PURE__*/ function(EventEmitter) {
             }
         },
         {
+            key: "scheduleGlobalNotify",
+            value: function scheduleGlobalNotify(key, meta, opts) {
+                var _this = this;
+                var cache = this._globalNotifyCache.get(meta);
+                if (!cache) {
+                    cache = new Map();
+                    this._globalNotifyCache.set(meta, cache);
+                }
+                var fn = cache.get(key);
+                if (!fn) {
+                    fn = function fn() {
+                        cache.delete(key);
+                        var finalVal = _this.store.get(key, opts);
+                        var waiters = meta._waiters.get(key);
+                        if (waiters) {
+                            var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+                            try {
+                                for(var _iterator = waiters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                                    var resolveFn = _step.value;
+                                    try {
+                                        resolveFn(finalVal);
+                                    } catch (err) {
+                                        console.error("[Sauron Waiter Error]:", err);
+                                    }
+                                }
+                            } catch (err) {
+                                _didIteratorError = true;
+                                _iteratorError = err;
+                            } finally{
+                                try {
+                                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                                        _iterator.return();
+                                    }
+                                } finally{
+                                    if (_didIteratorError) {
+                                        throw _iteratorError;
+                                    }
+                                }
+                            }
+                            meta._waiters.delete(key);
+                        }
+                        var _iteratorNormalCompletion1 = true, _didIteratorError1 = false, _iteratorError1 = undefined;
+                        try {
+                            for(var _iterator1 = meta._globalListeners[Symbol.iterator](), _step1; !(_iteratorNormalCompletion1 = (_step1 = _iterator1.next()).done); _iteratorNormalCompletion1 = true){
+                                var listener = _step1.value;
+                                try {
+                                    listener(key, finalVal);
+                                } catch (err) {
+                                    console.error("[Sauron Global Listener Error]:", err);
+                                }
+                            }
+                        } catch (err) {
+                            _didIteratorError1 = true;
+                            _iteratorError1 = err;
+                        } finally{
+                            try {
+                                if (!_iteratorNormalCompletion1 && _iterator1.return != null) {
+                                    _iterator1.return();
+                                }
+                            } finally{
+                                if (_didIteratorError1) {
+                                    throw _iteratorError1;
+                                }
+                            }
+                        }
+                    };
+                    cache.set(key, fn);
+                }
+                this.onFlush(fn);
+            }
+        },
+        {
+            key: "scheduleNotify",
+            value: function scheduleNotify(key, _listeners, _state) {
+                var cache = this._notifyCache.get(_listeners);
+                if (!cache) {
+                    cache = new Map();
+                    this._notifyCache.set(_listeners, cache);
+                }
+                var fn = cache.get(key);
+                if (!fn) {
+                    fn = function fn() {
+                        var _listeners_get;
+                        cache.delete(key);
+                        var val = _state.get(key);
+                        (_listeners_get = _listeners.get(key)) === null || _listeners_get === void 0 ? void 0 : _listeners_get.forEach(function(l) {
+                            return l(val);
+                        });
+                    };
+                    cache.set(key, fn);
+                }
+                this.onFlush(fn);
+            }
+        },
+        {
+            key: "getMap",
+            value: function getMap() {
+                var slave = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : this.s, master = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : this.m, rk = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : this.r;
+                var root = _class_private_field_get(this, _context).get(rk); // (globalThis as any)[rk]  //  ; (globalThis as any)[rk] = root;
+                if (!root) {
+                    root = new M2();
+                    _class_private_field_get(this, _context).set(rk, root);
+                }
+                var masterMap = root.get(master);
+                if (!masterMap) {
+                    masterMap = new M2();
+                    root.set(master, masterMap);
+                }
+                var slaveMap = masterMap.get(slave);
+                if (!slaveMap) {
+                    slaveMap = new M2();
+                    masterMap.set(slave, slaveMap);
+                }
+                return slaveMap;
+            }
+        },
+        {
+            key: "getMetadata",
+            value: function getMetadata() {
+                var s = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : this.s, m = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : this.m, r = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : this.r;
+                var root = _class_private_field_get(this, _meta_context).get(r); //  (globalThis as A)[r]; // STATE_CONTEXT === "sauron" ?  : null;
+                if (!root) {
+                    root = new M2();
+                    _class_private_field_get(this, _meta_context).set(r, root);
+                }
+                var masterMap = root.get(m);
+                if (!masterMap) {
+                    masterMap = new M2();
+                    root.set(m, masterMap);
+                }
+                var metaMap = masterMap.get(s);
+                if (!metaMap) {
+                    metaMap = {
+                        _batches: new Set(),
+                        _batchQueue: new Map(),
+                        _batchOpts: new Map(),
+                        _history: new Map(),
+                        _timeTravel: new Map(),
+                        _globalListeners: new Set(),
+                        _global_subscribers: new Map(),
+                        _waiters: new Map(),
+                        _sys: new Map(),
+                        _sealed: new Set(),
+                        _frozen: new Set(),
+                        _keyContracts: new Map(),
+                        _conflicts: new Map(),
+                        _conflictStrategies: new Map(),
+                        _causal: new Map(),
+                        _scopes: new Map(),
+                        _msgHandlers: new Map(),
+                        _lastWriteSource: new Map(),
+                        _mainMap: new Map(),
+                        _tupleCache: new Map(),
+                        _weakMap: new WeakMap(),
+                        _boundaries: new WeakMap()
+                    };
+                    masterMap.set(s, metaMap);
+                }
+                return metaMap;
+            }
+        },
+        {
             key: "onFlush",
             value: function onFlush(cb) {
                 this.dirty.add(cb);
@@ -4143,6 +4313,5 @@ function notify(key, value, prev) {
         }
     }
 }
-
 
 export { src_Registry as Registry, src_rv as rv, src_sameValue as sameValue };
