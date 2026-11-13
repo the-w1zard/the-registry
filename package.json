@@ -44,6 +44,9 @@
     "dependencies": {
         "@the-w1zard/dx": "^1.0.27"
     },
+    "peerDependencies": {
+        "@the-w1zard/dx": "^1.0.27"
+    },
     "imports": {
         "#STR": "@the-w1zard/app_store",
         "#tc": "./src/the-cloud.ts",
