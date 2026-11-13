@@ -69,7 +69,7 @@ export declare class Registry extends EventEmitter {
     get<T = A>(key: S): T | UD;
     get<T = A>(key: S, fallback: T): T;
     getAll(): A;
-    has(key: A): any;
+    has(key: A): boolean;
     freeze(): void;
     wait(key: A, { predicate, timeout, immediate, signal }?: A): Promise<any>;
     waitChange(key: A, opts?: {}): Promise<any>;
@@ -78,20 +78,20 @@ export declare class Registry extends EventEmitter {
     setIfPresent(key: A, value: U): boolean;
     replace(key: A, value: U): boolean;
     update(key: A, fn: (old: A, has: B) => A, initial: U): any;
-    inc(key: A, by?: number): any;
+    inc(key: A, by?: number): number;
     touch(key: A): boolean;
-    toJSON(): any;
-    entries(): any;
-    keys(): any;
-    values(): any;
-    find(pred: A): any;
+    toJSON(): OB<any>;
+    entries(): A2I<[any, any]>;
+    keys(): A2I<any>;
+    values(): A2I<any>;
+    find(pred: A): [any, any];
     findKey(pred: A): any;
-    group(fn: A): any;
-    pick(keys: A): any;
-    omit(keys: A): any;
+    group(fn: A): M2I<unknown, A2<any>>;
+    pick(keys: A): M2I<any, any>;
+    omit(keys: A): M2I<any, any>;
     snapshot(): A;
-    equals(other: A): any;
-    snapshotSubs(): any;
+    equals(other: A): boolean;
+    snapshotSubs(): M2I<any, any>;
     nextWaiterId: number;
     private nextDeferId;
     private draining;
@@ -206,7 +206,7 @@ export declare class Registry extends EventEmitter {
             (deps: S | S[], fn: (v?: A) => V): N;
             /** advance every multi-label waiter on this label */
             releaseMulti: (k: S, v: A) => void;
-            cancel: (id: N) => B;
+            cancel: (id: N | S) => B;
             wait_and_promise: <T = any>(timeoutMs: N, key: S, isOpen: B, current: A) => Promise<T>;
         };
         defer: {

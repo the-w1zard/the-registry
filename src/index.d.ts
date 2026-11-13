@@ -70,7 +70,12 @@ interface EnvDetectionState {
 	adapters: S[]; // full scan
 	ready: B;
 }
-type Maelstrom_Waiter = { id: N; deps: S[]; fn: (v?: A) => V; ready: SET<S> };
+type Maelstrom_Waiter = { 
+	 nodeId?: string;
+    predicate?: (value: any) => boolean;
+    resolve?: (value: any) => void;
+    reject?: (error: any) => void;
+	 id: S; deps: S[]; fn: (v?: A) => V; ready: SET<S> };
 type DeferredState = "pending" | "running";
 type DeferredTask = { id: N; deps: S[]; fn: (...v: A[]) => A; state: DeferredState };
 type DeferredStats = { registered: N; executed: N; completed: N; failed: N; cancelled: N };

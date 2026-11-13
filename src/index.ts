@@ -1774,7 +1774,7 @@ export class Registry extends EventEmitter {
                    return id;
                }
    
-               const entry: Maelstrom_Waiter = { id, deps: keys, fn, ready: new Set() }; // multi-label → one table row
+               const entry: Waiter = { id, deps: keys, fn, ready: new Set() }; // multi-label → one table row
                this.#multiWaiters.add(entry);
                for (const k of keys) {
                    const rift = this.maelstrom.rift<A>(k);
@@ -1803,7 +1803,7 @@ export class Registry extends EventEmitter {
                    }
                }
            };
-           fn.cancel = (id: N): B => {
+           fn.cancel = (id: N|S): B => {
                for (const entry of this.#multiWaiters) {
                    if (entry.id !== id) continue;
                    this.#multiWaiters.delete(entry);
