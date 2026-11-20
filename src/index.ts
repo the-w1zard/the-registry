@@ -3,7 +3,15 @@
 import "./index.d.ts"
 //                                                                                               [STORE]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-const { EventEmitter } = require("node:events");
+function load(name: string): any {
+	try { return MaybePromise(require(name)) } 
+	catch { return MaybePromise(import(name)) }
+}
+const events = await load("node:events")
+const EventEmitter = events.EventEmitter
+
+
+// const { EventEmitter } = require("node:events");
 type FlushCallback = () => V;
 export const rv = <T>(v: UF<T>): T => typeof v === "function" ? (v as () => T)() : v;
 export const sameValue = (a: A, b: A): B => Object.is(a, b) || (a instanceof Date && b instanceof Date && +a === +b);
@@ -2134,6 +2142,21 @@ export class Registry extends EventEmitter {
    public static readonly ADAPTER_CANDIDATES = ["websocket_dev_server", "cross_app_ws_server", "terminal_ngin_proxy_register", "terminal_ngin_proxy", "workspace_hub_server", "workspace_hub_client", "cross_app_ws_client", "cse_cross_app_server", "cse_cross_app_client", "shared_worker", "service_worker", "unix_worker", "broadcastr_channel", "websocket", "websocket_server", "websocket_client", "webrtc", "webrtc_server", "webrtc_client", "electron_server", "electron_client", "mqtt", "sse", "named_pipe", "worker_thread", "native_msg_host", "native_msg_client"] as const;
    public static readonly CAPABILITY_CANDIDATES = ["shared_worker", "service_worker", "unix_worker", "broadcastr_channel", "electron_server", "electron_client", "named_pipe", "native_msg_host", "native_msg_client"] as const;
    public maelstrom = (() => {
+	const env = {
+		node:    typeof process !== "undefined" && !!process.versions?.node,
+		browser: typeof window !== "undefined" && typeof document !== "undefined",
+		cjs:     typeof require !== "undefined" && typeof module !== "undefined",
+		bun:     typeof process !== "undefined" && !!(process as any)?.versions?.bun,
+		VSCode:     typeof process !== "undefined" && process.env.VSCODE_PID,
+		electron: false,
+		unix: false,
+	  }
+	function load(name: string): any {
+		//const blindReq = typeof require !== "undefined" ? (new Function("specifier", "return require(specifier)") as (s: string) => A) : null;
+		//const blindImpport = new Function("specifier", "return import(specifier)") as (s: string) => Promise<any>;
+		try { return MaybePromise(require(name)) } 
+		catch { return MaybePromise(import(name)) }
+	}
        const fn = () => {};
        fn.log=(where: S, detail: R = {}, type: "info" | "success" | "warn" | "error" = "info"): void =>{
            const payload: R = { ...detail };
