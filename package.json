@@ -26,12 +26,12 @@
         "build": "tsc",
         "dev": "rspack serve",
         "check": "tsc --noEmit",
-        "*": "npm update && npm run check && npm run build && npm run 1 && npm run 2 && npm run 3 && npm run 4 && npm run 5 && npm run 6 && npm run 7 && npm run 8"
+        "*": "pnpm update && npm run check && npm run build && npm run 1 && npm run 2 && npm run 3 && npm run 4 && npm run 5 && npm run 6 && npm run 7 && npm run 8"
     },
     "devDependencies": {
-        "@babel/parser": "^8.1.2",
-        "@babel/traverse": "^8.1.2",
-        "@babel/types": "^8.1.2",
+        "@babel/parser": "^8.1.3",
+        "@babel/traverse": "^8.1.3",
+        "@babel/types": "^8.1.3",
         "@rspack/cli": "^2.3.3",
         "@rspack/core": "^2.3.3",
         "@rspack/dev-server": "^2.2.2",
@@ -42,7 +42,7 @@
         "typescript": "^7.0.2"
     },
     "dependencies": {
-        "@the-w1zard/dx": "^1.0.35"
+        "@the-w1zard/dx": "^1.0.39"
     },
     "peerDependencies": {
         "@the-w1zard/dx": "^1.0.27"

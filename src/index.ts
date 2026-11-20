@@ -4,9 +4,16 @@ import "./index.d.ts"
 //                                                                                               [STORE]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 function load(name: string): any {
-	try { return MaybePromise(require(name)) } 
-	catch { return MaybePromise(import(name)) }
+	let v: A;
+	try {
+		v = require(name)  ;
+		if (v !== undefined) { return MaybePromise(v); } 
+		else { return MaybePromise(import(name)); }
+	} catch {
+		return MaybePromise(import(name));
+	}
 }
+
 const events = await load("node:events")
 const EventEmitter = events.EventEmitter
 

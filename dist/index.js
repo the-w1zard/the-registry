@@ -4,8 +4,15 @@ import "./index.d.ts";
 //                                                                                               [STORE]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 function load(name) {
+    let v;
     try {
-        return MaybePromise(require(name));
+        v = require(name);
+        if (v !== undefined) {
+            return MaybePromise(v);
+        }
+        else {
+            return MaybePromise(import(name));
+        }
     }
     catch {
         return MaybePromise(import(name));
