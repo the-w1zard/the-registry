@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-w1zard/dx':
-        specifier: ^1.0.40
-        version: 1.0.40
+        specifier: ^1.0.41
+        version: 1.0.41
     devDependencies:
       '@babel/parser':
         specifier: ^8.1.3
@@ -31,8 +31,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2(@rspack/core@2.3.3)
       '@the-w1zard/alias_types':
-        specifier: ^1.0.19
-        version: 1.0.19
+        specifier: ^1.0.20
+        version: 1.0.20
       '@the-w1zard/types':
         specifier: ^1.0.15
         version: 1.0.15
@@ -227,11 +227,11 @@ packages:
       selfsigned:
         optional: true
 
-  '@the-w1zard/alias_types@1.0.19':
-    resolution: {integrity: sha512-OjTF9cj7URj+9sOvdk01wF/jvnm4gBEH1fJm74tpf5jMqRXpvzlkJYJeTGaGlceefcNiDEP1WT+YY9t33ztKmg==}
+  '@the-w1zard/alias_types@1.0.20':
+    resolution: {integrity: sha512-AyRpnY3GU+vIDf3vSuQK63Dy+/B2G1W12I8IrvX1089h1AlhxsaKCMaY6JHGokz4ZUVhCxge34PFLRidDmckkQ==}
 
-  '@the-w1zard/dx@1.0.40':
-    resolution: {integrity: sha512-uyOC8ZzaNcnydbLfT+xkmfYruIUkVWnvEe6vzv+X3gyZfuubY8CWasiOuNFhCFIxk45qc7Uy9XTQZCbmIlSaKg==}
+  '@the-w1zard/dx@1.0.41':
+    resolution: {integrity: sha512-m6ViQBL95caKD69rX/m5rtpwMPUESyCogFYt9epKX7px7WQl6fZVIGl60YHN6y73jslCafBL8a6LFD+1AJOV8A==}
 
   '@the-w1zard/types@1.0.15':
     resolution: {integrity: sha512-iy1wq7QgV5KC4wdn+D0d1vymtWmbWNCfEWjexzcn9NFRX0/RlrK2Snt1MbdLB75Z/9/KsfRk2zUByMQzQ3JSfQ==}
@@ -557,9 +557,9 @@ snapshots:
       '@rspack/core': 2.3.3
       '@rspack/dev-middleware': 2.0.6(@rspack/core@2.3.3)
 
-  '@the-w1zard/alias_types@1.0.19': {}
+  '@the-w1zard/alias_types@1.0.20': {}
 
-  '@the-w1zard/dx@1.0.40':
+  '@the-w1zard/dx@1.0.41':
     dependencies:
       '@babel/parser': 8.1.3
       '@babel/traverse': 8.1.3
@@ -567,7 +567,7 @@ snapshots:
 
   '@the-w1zard/types@1.0.15':
     dependencies:
-      '@the-w1zard/alias_types': 1.0.19
+      '@the-w1zard/alias_types': 1.0.20
 
   '@tsconfig/node-lts@24.0.1': {}
 

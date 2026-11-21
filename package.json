@@ -35,14 +35,14 @@
         "@rspack/cli": "^2.3.3",
         "@rspack/core": "^2.3.3",
         "@rspack/dev-server": "^2.2.2",
-        "@the-w1zard/alias_types": "^1.0.19",
+        "@the-w1zard/alias_types": "^1.0.20",
         "@the-w1zard/types": "^1.0.15",
         "@tsconfig/node-lts": "^24.0.1",
         "@types/node": "^24.19.2",
         "typescript": "^7.0.2"
     },
     "dependencies": {
-        "@the-w1zard/dx": "^1.0.40"
+        "@the-w1zard/dx": "^1.0.41"
     },
     "peerDependencies": {
         "@the-w1zard/dx": "^1.0.27"
