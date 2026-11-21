@@ -1,4 +1,6 @@
-import "./index.d.ts";
+import "@the-w1zard/alias_types";
+import "@the-w1zard/types";
+import "@the-w1zard/dx";
 declare const EventEmitter: any;
 type FlushCallback = () => V;
 export declare const rv: <T>(v: UF<T>) => T;

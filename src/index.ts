@@ -1,6 +1,8 @@
 
 /// <reference types="./index.d.ts" />
-import "./index.d.ts"
+import "@the-w1zard/alias_types"
+import "@the-w1zard/types"
+import "@the-w1zard/dx"
 //                                                                                               [STORE]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 function load(name: string): any {

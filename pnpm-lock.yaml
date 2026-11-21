@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-w1zard/dx':
-        specifier: ^1.0.41
-        version: 1.0.41
+        specifier: ^1.0.42
+        version: 1.0.42
     devDependencies:
       '@babel/parser':
         specifier: ^8.1.3
@@ -31,11 +31,11 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2(@rspack/core@2.3.3)
       '@the-w1zard/alias_types':
-        specifier: ^1.0.20
-        version: 1.0.20
+        specifier: ^1.0.22
+        version: 1.0.22(@rspack/dev-server@2.2.2(@rspack/core@2.3.3))
       '@the-w1zard/types':
         specifier: ^1.0.15
-        version: 1.0.15
+        version: 1.0.15(@rspack/dev-server@2.2.2(@rspack/core@2.3.3))
       '@tsconfig/node-lts':
         specifier: ^24.0.1
         version: 24.0.1
@@ -227,11 +227,11 @@ packages:
       selfsigned:
         optional: true
 
-  '@the-w1zard/alias_types@1.0.20':
-    resolution: {integrity: sha512-AyRpnY3GU+vIDf3vSuQK63Dy+/B2G1W12I8IrvX1089h1AlhxsaKCMaY6JHGokz4ZUVhCxge34PFLRidDmckkQ==}
+  '@the-w1zard/alias_types@1.0.22':
+    resolution: {integrity: sha512-V8KOWiDVCJSIaBHo/CV5pge2EmWkY4EkcvEFcdGKiktewG3ug+FKykZEr7mBzYxuM3RZMFCxzX7X3UOIYNCJfg==}
 
-  '@the-w1zard/dx@1.0.41':
-    resolution: {integrity: sha512-m6ViQBL95caKD69rX/m5rtpwMPUESyCogFYt9epKX7px7WQl6fZVIGl60YHN6y73jslCafBL8a6LFD+1AJOV8A==}
+  '@the-w1zard/dx@1.0.42':
+    resolution: {integrity: sha512-wCuZSsYCaV3k5z9ccC0IqEYHPzlIIsZ5/IM3gds1HWPsMJ5Q4nu/ULzndJfxJpVEJfpOqLQsqeCg6bDvficLcA==}
 
   '@the-w1zard/types@1.0.15':
     resolution: {integrity: sha512-iy1wq7QgV5KC4wdn+D0d1vymtWmbWNCfEWjexzcn9NFRX0/RlrK2Snt1MbdLB75Z/9/KsfRk2zUByMQzQ3JSfQ==}
@@ -557,17 +557,31 @@ snapshots:
       '@rspack/core': 2.3.3
       '@rspack/dev-middleware': 2.0.6(@rspack/core@2.3.3)
 
-  '@the-w1zard/alias_types@1.0.20': {}
+  '@the-w1zard/alias_types@1.0.22(@rspack/dev-server@2.2.2(@rspack/core@2.3.3))':
+    dependencies:
+      '@babel/parser': 8.1.3
+      '@babel/traverse': 8.1.3
+      '@babel/types': 8.1.3
+      '@rspack/cli': 2.3.3(@rspack/core@2.3.3)(@rspack/dev-server@2.2.2(@rspack/core@2.3.3))
+      '@rspack/core': 2.3.3
+    transitivePeerDependencies:
+      - '@module-federation/runtime-tools'
+      - '@rspack/dev-server'
+      - '@swc/helpers'
 
-  '@the-w1zard/dx@1.0.41':
+  '@the-w1zard/dx@1.0.42':
     dependencies:
       '@babel/parser': 8.1.3
       '@babel/traverse': 8.1.3
       '@babel/types': 8.1.3
 
-  '@the-w1zard/types@1.0.15':
+  '@the-w1zard/types@1.0.15(@rspack/dev-server@2.2.2(@rspack/core@2.3.3))':
     dependencies:
-      '@the-w1zard/alias_types': 1.0.20
+      '@the-w1zard/alias_types': 1.0.22(@rspack/dev-server@2.2.2(@rspack/core@2.3.3))
+    transitivePeerDependencies:
+      - '@module-federation/runtime-tools'
+      - '@rspack/dev-server'
+      - '@swc/helpers'
 
   '@tsconfig/node-lts@24.0.1': {}
 
