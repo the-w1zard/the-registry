@@ -1,6 +1,6 @@
 {
     "name": "@the-w1zard/the-registry",
-    "version": "1.0.18",
+    "version": "1.0.19",
     "sideEffects": false,
     "type": "module",
     "main": "./dist/index.js",
