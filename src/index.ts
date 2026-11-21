@@ -19,6 +19,8 @@ const EventEmitter = events.EventEmitter
 
 
 // const { EventEmitter } = require("node:events");
+
+
 type FlushCallback = () => V;
 export const rv = <T>(v: UF<T>): T => typeof v === "function" ? (v as () => T)() : v;
 export const sameValue = (a: A, b: A): B => Object.is(a, b) || (a instanceof Date && b instanceof Date && +a === +b);
