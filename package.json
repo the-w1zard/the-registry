@@ -42,7 +42,7 @@
         "typescript": "^7.0.2"
     },
     "dependencies": {
-        "@the-w1zard/dx": "^1.0.39"
+        "@the-w1zard/dx": "^1.0.40"
     },
     "peerDependencies": {
         "@the-w1zard/dx": "^1.0.27"

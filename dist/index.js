@@ -1,4 +1,3 @@
-/// <reference types="@the-w1zard/dx" />
 /// <reference types="./index.d.ts" />
 import "./index.d.ts";
 //                                                                                               [STORE]

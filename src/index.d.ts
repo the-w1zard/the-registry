@@ -1,4 +1,6 @@
 /// <reference types="@the-w1zard/dx" />
+/// <reference types="@the-w1zard/alias_types" />
+/// <reference types="@the-w1zard/types" />
 
 export {}
 
