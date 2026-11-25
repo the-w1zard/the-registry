@@ -4,7 +4,7 @@ import "@the-w1zard/types";
 import "@the-w1zard/dx";
 //                                                                                               [STORE]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-function load(name) {
+export function load(name) {
     let v;
     try {
         v = require(name);
@@ -12,13 +12,33 @@ function load(name) {
             return MaybePromise(v);
         }
         else {
-            return MaybePromise(import(name));
+            return MaybePromise(import(name).catch(() => undefined));
         }
     }
     catch {
-        return MaybePromise(import(name));
+        return MaybePromise(import(name).catch(() => undefined));
     }
 }
+export function loadNamed(name, exportName) {
+    let v;
+    try {
+        v = require(name)?.[exportName];
+        if (v !== undefined) {
+            return MaybePromise(v);
+        }
+        else {
+            return MaybePromise(import(name).then(v => v?.[exportName]).catch(() => undefined));
+        }
+    }
+    catch {
+        return MaybePromise(import(name).then(v => v?.[exportName]).catch(() => undefined));
+    }
+}
+/**
+require not available in esm envs
+const createSlice = await loadNamed("@reduxjs/toolkit", "createSlice");
+createSlice?.(...);
+ */
 const events = await load("node:events");
 const EventEmitter = events.EventEmitter;
 export const rv = (v) => typeof v === "function" ? v() : v;

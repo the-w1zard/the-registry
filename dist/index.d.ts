@@ -1,6 +1,8 @@
 import "@the-w1zard/alias_types";
 import "@the-w1zard/types";
 import "@the-w1zard/dx";
+export declare function load(name: string): any;
+export declare function loadNamed(name: any, exportName: any): any;
 declare const EventEmitter: any;
 type FlushCallback = () => V;
 export declare const rv: <T>(v: UF<T>) => T;
