@@ -1,9 +1,11 @@
-
+//                                                                                             [IMPORTS]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 /// <reference types="./index.d.ts" />
 import "@the-w1zard/alias_types"
 import "@the-w1zard/types"
 import "@the-w1zard/dx"
-//                                                                                               [STORE]
+// #endregion
+//                                                                                                [LOAD]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 export function load(name: string): any {
 	let v: A;
@@ -30,14 +32,12 @@ require not available in esm envs
 const createSlice = await loadNamed("@reduxjs/toolkit", "createSlice");
 createSlice?.(...);
  */
-
 const events = await load("node:events")
 const EventEmitter = events.EventEmitter
-
-
 // const { EventEmitter } = require("node:events");
-
-
+// #endregion
+//                                                                                               [M2 02]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 type FlushCallback = () => V;
 export const rv = <T>(v: UF<T>): T => typeof v === "function" ? (v as () => T)() : v;
 export const sameValue = (a: A, b: A): B => Object.is(a, b) || (a instanceof Date && b instanceof Date && +a === +b);
@@ -48,7 +48,6 @@ function wait_for_promise_in_rift<T>(gate: Promise<T>, timeoutMs: number): Promi
     });
     return Promise.race([gate, timeout]).finally(() => clearTimeout(timer));
 }
-
 export type Subscription<H, T> = (e: M2Event<H, T>) => void;
 export class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
 	// public g = this.get;
@@ -552,7 +551,6 @@ export class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
 		return new M2(map);
 	}
 }
-
 export class O2I<K extends PropertyKey = S, T = A> {
 	#data: Record<K, T> = Object.create(null);
 
@@ -1087,7 +1085,6 @@ export class O2I<K extends PropertyKey = S, T = A> {
 		return out;
 	}
 }
-
 export class SET2<T = A> extends Set<T> implements SET2<T> {
 	public s = this.add;
 	public take(value: T): T | UD {
@@ -1282,7 +1279,9 @@ export class SET2<T = A> extends Set<T> implements SET2<T> {
 		return new SET2(values);
 	}
 }
-
+// #endregion
+//                                                                                                 [LOG]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 class ORC_SHOUT {
 	c = {
 		emerald: { 10: "#002c22", 9: "#004f3b", 8: "#016630", 7: "#007a55", 6: "#009966", 5: "#00bc7d" },
@@ -1430,6 +1429,9 @@ class ORC_SHOUT {
 		console.log(logParts, ...styles);
 	}
 }
+// #endregion
+//                                                                                                [RIFT]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 class Rift<T = A> implements RiftLike<T> {
     private opened = false;
     private claimed = false;
@@ -1479,6 +1481,9 @@ class Rift<T = A> implements RiftLike<T> {
     get isClaimed() { return this.claimed; }
     get current(): T | undefined { return this.value; }
 }
+// #endregion
+//                                                                                            [REGISTRY]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 export class Registry extends EventEmitter {
 	//                                                                                           [CONSTANTS]
 	// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -3471,3 +3476,4 @@ export class Registry extends EventEmitter {
    })();
    // #endregion
 }
+// #endregion

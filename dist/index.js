@@ -1,8 +1,11 @@
+//                                                                                             [IMPORTS]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 /// <reference types="./index.d.ts" />
 import "@the-w1zard/alias_types";
 import "@the-w1zard/types";
 import "@the-w1zard/dx";
-//                                                                                               [STORE]
+// #endregion
+//                                                                                                [LOAD]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 export function load(name) {
     let v;
@@ -1320,6 +1323,9 @@ export class SET2 extends Set {
         return new SET2(values);
     }
 }
+// #endregion
+//                                                                                                 [LOG]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 class ORC_SHOUT {
     c = {
         emerald: { 10: "#002c22", 9: "#004f3b", 8: "#016630", 7: "#007a55", 6: "#009966", 5: "#00bc7d" },
@@ -1459,6 +1465,9 @@ class ORC_SHOUT {
         console.log(logParts, ...styles);
     }
 }
+// #endregion
+//                                                                                                [RIFT]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 class Rift {
     opened = false;
     claimed = false;
@@ -1509,6 +1518,9 @@ class Rift {
     get isClaimed() { return this.claimed; }
     get current() { return this.value; }
 }
+// #endregion
+//                                                                                            [REGISTRY]
+// #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
 export class Registry extends EventEmitter {
     //                                                                                           [CONSTANTS]
     // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -3593,3 +3605,4 @@ export class Registry extends EventEmitter {
         return fn;
     })();
 }
+// #endregion
