@@ -49,7 +49,7 @@ function wait_for_promise_in_rift<T>(gate: Promise<T>, timeoutMs: number): Promi
     return Promise.race([gate, timeout]).finally(() => clearTimeout(timer));
 }
 export type Subscription<H, T> = (e: M2Event<H, T>) => void;
-export class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
+ class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
 	// public g = this.get;
 	// public h = this.has;
 	// public d = this.delete;
@@ -551,7 +551,7 @@ export class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
 		return new M2(map);
 	}
 }
-export class O2I<K extends PropertyKey = S, T = A> {
+ class O2I<K extends PropertyKey = S, T = A> {
 	#data: Record<K, T> = Object.create(null);
 
 	public f = this.forEachKV;//                                                    [FOR EACH]
@@ -1085,7 +1085,7 @@ export class O2I<K extends PropertyKey = S, T = A> {
 		return out;
 	}
 }
-export class SET2<T = A> extends Set<T> implements SET2<T> {
+ class SET2<T = A> extends Set<T> implements SET2<T> {
 	public s = this.add;
 	public take(value: T): T | UD {
 		if (!this.delete(value)) return undefined as UD;
@@ -1282,7 +1282,7 @@ export class SET2<T = A> extends Set<T> implements SET2<T> {
 // #endregion
 //                                                                                                 [LOG]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-class ORC_SHOUT {
+export class ORC_SHOUT {
 	c = {
 		emerald: { 10: "#002c22", 9: "#004f3b", 8: "#016630", 7: "#007a55", 6: "#009966", 5: "#00bc7d" },
 		blue: { 10: "", 9: "", 8: "", 7: "", 6: "", 5: "" },

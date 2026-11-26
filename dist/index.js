@@ -53,7 +53,7 @@ function wait_for_promise_in_rift(gate, timeoutMs) {
     });
     return Promise.race([gate, timeout]).finally(() => clearTimeout(timer));
 }
-export class M2 extends Map {
+class M2 extends Map {
     // public g = this.get;
     // public h = this.has;
     // public d = this.delete;
@@ -542,7 +542,7 @@ export class M2 extends Map {
         return new M2(map);
     }
 }
-export class O2I {
+class O2I {
     #data = Object.create(null);
     f = this.forEachKV; //                                                    [FOR EACH]
     #subs;
@@ -1097,7 +1097,7 @@ export class O2I {
         return out;
     }
 }
-export class SET2 extends Set {
+class SET2 extends Set {
     s = this.add;
     take(value) {
         if (!this.delete(value))
@@ -1326,7 +1326,7 @@ export class SET2 extends Set {
 // #endregion
 //                                                                                                 [LOG]
 // #region ══════════════════════════════════════════════════════════════════════════════════════════════════════
-class ORC_SHOUT {
+export class ORC_SHOUT {
     c = {
         emerald: { 10: "#002c22", 9: "#004f3b", 8: "#016630", 7: "#007a55", 6: "#009966", 5: "#00bc7d" },
         blue: { 10: "", 9: "", 8: "", 7: "", 6: "", 5: "" },

@@ -34,8 +34,8 @@ importers:
         specifier: ^1.0.24
         version: 1.0.24(@rspack/dev-server@2.2.2(@rspack/core@2.3.4))
       '@the-w1zard/types':
-        specifier: ^1.0.15
-        version: 1.0.15(@rspack/dev-server@2.2.2(@rspack/core@2.3.4))
+        specifier: ^1.0.16
+        version: 1.0.16(@rspack/dev-server@2.2.2(@rspack/core@2.3.4))
       '@tsconfig/node-lts':
         specifier: ^24.0.1
         version: 24.0.1
@@ -233,8 +233,8 @@ packages:
   '@the-w1zard/dx@1.0.46':
     resolution: {integrity: sha512-Hj9ZQ4gehZHzFLEapC/20VDypaZ9cGee9+hoko2q766rV8J9Epf1ZrUYOrbzshKtrSxDuLbpBcGASBQNr2eN7A==}
 
-  '@the-w1zard/types@1.0.15':
-    resolution: {integrity: sha512-iy1wq7QgV5KC4wdn+D0d1vymtWmbWNCfEWjexzcn9NFRX0/RlrK2Snt1MbdLB75Z/9/KsfRk2zUByMQzQ3JSfQ==}
+  '@the-w1zard/types@1.0.16':
+    resolution: {integrity: sha512-0tvxvZRaV6wVfIQCYloN96SDglAtd7dtV0Nky2glYnoe4XJ2eb+rSh/S0fBPFMd0YPjEBroWwS8/kFkt9J19RA==}
 
   '@tsconfig/node-lts@24.0.1':
     resolution: {integrity: sha512-xo+1KtV5zVb90fyyeglG1n5cqg3cQXLlCkEpLptYlZUNk28xmwhuD5GmxoXwmrVtUTvaMyclun9kAd0TK7H+Pg==}
@@ -575,7 +575,7 @@ snapshots:
       '@babel/traverse': 8.1.3
       '@babel/types': 8.1.3
 
-  '@the-w1zard/types@1.0.15(@rspack/dev-server@2.2.2(@rspack/core@2.3.4))':
+  '@the-w1zard/types@1.0.16(@rspack/dev-server@2.2.2(@rspack/core@2.3.4))':
     dependencies:
       '@the-w1zard/alias_types': 1.0.24(@rspack/dev-server@2.2.2(@rspack/core@2.3.4))
     transitivePeerDependencies:

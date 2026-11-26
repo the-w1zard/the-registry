@@ -8,7 +8,7 @@ type FlushCallback = () => V;
 export declare const rv: <T>(v: UF<T>) => T;
 export declare const sameValue: (a: A, b: A) => B;
 export type Subscription<H, T> = (e: M2Event<H, T>) => void;
-export declare class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
+declare class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
     #private;
     f: (callbackfn: (value: T, key: H, map: Map<H, T>) => void, thisArg?: any) => void;
     [Symbol.iterator](): MapIterator<[H, T]>;
@@ -75,7 +75,7 @@ export declare class M2<H = A, T = A> extends Map<H, T> implements M2I<H, T> {
     static fromEntries<H, T>(entries: I<readonly [H, T]>): M2<H, T>;
     static from<H, T>(map: RM<H, T>): M2<H, T>;
 }
-export declare class O2I<K extends PropertyKey = S, T = A> {
+declare class O2I<K extends PropertyKey = S, T = A> {
     #private;
     f: (fn: (v: T, k: K, map: this) => void) => void;
     constructor(entries?: I<readonly [K, T]>);
@@ -157,45 +157,125 @@ export declare class O2I<K extends PropertyKey = S, T = A> {
     static fromEntries<K extends PropertyKey, T>(entries: I<readonly [K, T]>): O2I<K, T>;
     static from<K extends PropertyKey, T>(source: O2I<K, T> | Readonly<Record<K, T>>): O2I<K, T>;
 }
-export declare class SET2<T = A> extends Set<T> implements SET2<T> {
-    s: (value: T) => this;
-    take(value: T): T | UD;
-    peek(value: T): T | false;
-    toggle(value: T): B;
-    first(): T | UD;
-    last(): T | UD;
-    union(other: Iterable<T>): SET2I<T>;
-    intersection(other: Iterable<T>): SET2I<T>;
-    difference(other: Iterable<T>): SET2I<T>;
-    symmetricDifference(other: Iterable<T>): SET2I<T>;
-    isSubsetOf(other: Iterable<T>): B;
-    isSupersetOf(other: Iterable<T>): B;
-    isDisjointFrom(other: Iterable<T>): B;
-    equals(other: Iterable<T>): B;
-    filter(fn: (v: T, set: this) => B): SET2I<T>;
-    map<R>(fn: (v: T, set: this) => R): SET2I<R>;
-    partition(fn: (v: T, set: this) => B): [SET2I<T>, SET2I<T>];
-    differenceBy<K>(other: Iterable<T>, fn: (v: T) => K): SET2I<T>;
-    uniqueBy<K>(fn: (v: T) => K): SET2I<T>;
-    find(fn: (v: T, set: this) => B): T | UD;
-    every(fn: (v: T, set: this) => B): B;
-    some(fn: (v: T, set: this) => B): B;
-    reduce<R>(fn: (acc: R, v: T, set: this) => R, initial: R): R;
-    addAll(values: Iterable<T>): this;
-    deleteAll(values: Iterable<T>): N;
-    retainAll(values: Iterable<T>): this;
-    update(values: Iterable<T>): this;
-    replace(values: Iterable<T>): this;
-    swap(a: T, b: T): B;
-    clone(): this;
-    toArray(): T[];
-    toMap<K, R>(fn: (v: T) => readonly [K, R]): M2<K, R>;
-    toObject(fn?: (v: T) => S): OB<T>;
-    toJSON(): T[];
-    static fromArray<T>(values: T[]): SET2I<T>;
-    static fromObject<O extends Record<string, A>>(obj: O): SET2I<O[keyof O]>;
-    static fromEntries<T>(entries: Iterable<readonly [unknown, T]>): SET2I<T>;
-    static from<T>(values: Iterable<T>): SET2I<T>;
+export declare class ORC_SHOUT {
+    c: {
+        emerald: {
+            10: string;
+            9: string;
+            8: string;
+            7: string;
+            6: string;
+            5: string;
+        };
+        blue: {
+            10: string;
+            9: string;
+            8: string;
+            7: string;
+            6: string;
+            5: string;
+        };
+    };
+    t: {
+        deep: {
+            bg: string;
+            txt: string;
+            size: number;
+            title_size: number;
+            title_txt: string;
+            payload_key: string;
+            payload_value: string;
+            font: string;
+            border: string;
+            borderRadius: string;
+            padding: string;
+            svg: string;
+        };
+        vintage: {
+            bg: string;
+            txt: string;
+            size: number;
+            title_size: number;
+            title_txt: string;
+            payload_key: string;
+            payload_value: string;
+            font: string;
+            border: string;
+            borderRadius: string;
+            padding: string;
+            svg: string;
+        };
+        error: {
+            bg: string;
+            txt: string;
+            size: number;
+            title_size: number;
+            title_txt: string;
+            payload_key: string;
+            payload_value: string;
+            font: string;
+            border: string;
+            borderRadius: string;
+            padding: string;
+            svg: string;
+        };
+        warn: {
+            bg: string;
+            txt: string;
+            size: number;
+            title_size: number;
+            title_txt: string;
+            payload_key: string;
+            payload_value: string;
+            font: string;
+            border: string;
+            borderRadius: string;
+            padding: string;
+            svg: string;
+        };
+        success: {
+            bg: string;
+            txt: string;
+            size: number;
+            title_size: number;
+            title_txt: string;
+            payload_key: string;
+            payload_value: string;
+            font: string;
+            border: string;
+            borderRadius: string;
+            padding: string;
+            svg: string;
+        };
+        info: {
+            bg: string;
+            txt: string;
+            size: number;
+            title_size: number;
+            title_txt: string;
+            payload_key: string;
+            payload_value: string;
+            font: string;
+            border: string;
+            borderRadius: string;
+            padding: string;
+            svg: string;
+        };
+    };
+    log(msg: string | string[], p?: any, theme?: {
+        bg: string;
+        txt: string;
+        size: number;
+        title_size: number;
+        title_txt: string;
+        payload_key: string;
+        payload_value: string;
+        font: string;
+        border: string;
+        borderRadius: string;
+        padding: string;
+        svg: string;
+    }): void;
 }
 export declare class Registry extends EventEmitter {
     #private;

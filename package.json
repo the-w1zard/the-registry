@@ -1,19 +1,9 @@
 {
-    "name": "@the-w1zard/the-registry",
     "version": "1.0.23",
-    "sideEffects": false,
-    "type": "module",
-    "main": "./dist/index.js",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
-        }
-    },
-    "files": [
-        "dist",
-        "./src/index.d.ts"
-    ],
+    "name": "@the-w1zard/the-registry",
+    "author": "",
+    "homepage": "https://github.com/the-w1zard",
+    "repository": "https://github.com/the-w1zard/the-registry",
     "scripts": {
         "1": "git add .",
         "2": "git commit -m \"first commit\"",
@@ -28,6 +18,20 @@
         "check": "tsc --noEmit",
         "*": "pnpm update && npm run check && npm run build && npm run 1 && npm run 2 && npm run 3 && npm run 4 && npm run 5 && npm run 6 && npm run 7 && npm run 8"
     },
+    "sideEffects": true,
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "./src/index.d.ts"
+    ],
     "devDependencies": {
         "@babel/parser": "^8.1.3",
         "@babel/traverse": "^8.1.3",
@@ -36,16 +40,13 @@
         "@rspack/core": "^2.3.4",
         "@rspack/dev-server": "^2.2.2",
         "@the-w1zard/alias_types": "^1.0.24",
-        "@the-w1zard/types": "^1.0.15",
+        "@the-w1zard/types": "^1.0.16",
         "@tsconfig/node-lts": "^24.0.1",
         "@types/node": "^24.19.4",
         "typescript": "^7.0.2"
     },
     "dependencies": {
         "@the-w1zard/dx": "^1.0.46"
-    },
-    "peerDependencies": {
-        "@the-w1zard/dx": "^1.0.27"
     },
     "imports": {
         "#STR": "@the-w1zard/app_store",
